@@ -1,0 +1,54 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final isTheme = StateProvider<bool>((ref) => true);
+
+void main() {
+  runApp(const ProviderScope(child: MyApp()));
+}
+
+class MyApp extends ConsumerStatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    final islighttheme = ref.watch(isTheme);
+    return MaterialApp(
+      title: 'Theme',
+      theme: islighttheme ? ThemeData.light() : ThemeData.dark(),
+      debugShowCheckedModeBanner: false,
+      home: Myhome(),
+    );
+  }
+}
+
+class Myhome extends ConsumerWidget {
+  const Myhome({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final islighten = ref.watch(isTheme);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Dark Theme"),
+        backgroundColor: Colors.blue,
+      ),
+      body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("Now this is the mode", style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),),
+          Switch(
+              value: islighten,
+              onChanged: (value) => ref.read(isTheme.notifier).state = value),
+        ],
+      )),
+    );
+  }
+}
